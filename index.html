@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kalp Hastalığı Risk Değerlendirme Asistanı - AI destekli analiz">
+    <title>Kalp Hastalığı Risk Değerlendirme</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>❤️ Kalp Hastalığı Risk Değerlendirme</h1>
+            <p>AI ve XGBoost destekli kalp sağlığı analizi</p>
+        </header>
+
+        <!-- Form Section -->
+        <section class="card" id="formSection">
+            <h2 class="card-title">
+                <span class="icon">📝</span>
+                Sağlık Bilgilerinizi Girin
+            </h2>
+
+            <form id="riskForm">
+                <!-- Yaş -->
+                <div class="form-group">
+                    <label class="form-label" for="age">
+                        1. Yaşınız <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        class="form-input"
+                        min="1"
+                        max="120"
+                        required
+                        placeholder="Örn: 45"
+                    >
+                    <p class="form-hint">1-120 arası bir değer girin</p>
+                </div>
+
+                <!-- Cinsiyet -->
+                <div class="form-group">
+                    <label class="form-label">
+                        2. Cinsiyetiniz <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="sexMale" name="sex" value="1" required>
+                            <label for="sexMale">Erkek</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="sexFemale" name="sex" value="0" required>
+                            <label for="sexFemale">Kadın</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Göğüs Ağrısı Tipi -->
+                <div class="form-group">
+                    <label class="form-label" for="cp">
+                        3. Göğüs Ağrısı Tipi <span class="required">*</span>
+                    </label>
+                    <select id="cp" name="cp" class="form-input" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="1">Tip 1 - Anjin yok (Tipik olmayan)</option>
+                        <option value="2">Tip 2 - Anjina benzeri</option>
+                        <option value="3">Tip 3 - Anjina var (Tipik)</option>
+                        <option value="0">Asemptomatik (Belirti yok)</option>
+                    </select>
+                    <p class="form-hint">Hissettiğiniz göğüs ağrısı tipini seçin</p>
+                </div>
+
+                <!-- Dinlenik Kan Basıncı -->
+                <div class="form-group">
+                    <label class="form-label" for="trestbps">
+                        4. Dinlenik Kan Basıncı (mmHg) <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="trestbps"
+                        name="trestbps"
+                        class="form-input"
+                        min="80"
+                        max="250"
+                        required
+                        placeholder="Örn: 120"
+                    >
+                    <p class="form-hint">Normal: 90-120 mmHg</p>
+                </div>
+
+                <!-- Kolesterol -->
+                <div class="form-group">
+                    <label class="form-label" for="chol">
+                        5. Kolesterol Seviyesi (mg/dL) <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="chol"
+                        name="chol"
+                        class="form-input"
+                        min="100"
+                        max="600"
+                        required
+                        placeholder="Örn: 200"
+                    >
+                    <p class="form-hint">Normal: &lt;200 mg/dL</p>
+                </div>
+
+                <!-- Açlık Şekeri -->
+                <div class="form-group">
+                    <label class="form-label">
+                        6. Açlık Şekeri > 120 mg/dL? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="fbsYes" name="fbs" value="1" required>
+                            <label for="fbsYes">Evet</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="fbsNo" name="fbs" value="0" required>
+                            <label for="fbsNo">Hayır</label>
+                        </div>
+                    </div>
+                    <p class="form-hint">Diyabet göstergesi</p>
+                </div>
+
+                <!-- EKG Sonuçları -->
+                <div class="form-group">
+                    <label class="form-label" for="restecg">
+                        7. Dinlenik EKG Sonucu <span class="required">*</span>
+                    </label>
+                    <select id="restecg" name="restecg" class="form-input" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T dalgalanması borderline</option>
+                        <option value="2">Sol ventriküler hipertrofi belirtileri</option>
+                    </select>
+                </div>
+
+                <!-- Maksimum Kalp Hızı -->
+                <div class="form-group">
+                    <label class="form-label" for="thalach">
+                        8. Maksimum Kalp Hızı <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="thalach"
+                        name="thalach"
+                        class="form-input"
+                        min="60"
+                        max="220"
+                        required
+                        placeholder="Örn: 150"
+                    >
+                    <p class="form-hint">Egzersiz sırasında ulaşılan max nabız</p>
+                </div>
+
+                <!-- Egzersiz Anjinası -->
+                <div class="form-group">
+                    <label class="form-label">
+                        9. Egzersiz Sırasında Göğüs Ağrısı? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="exangYes" name="exang" value="1" required>
+                            <label for="exangYes">Evet</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="exangNo" name="exang" value="0" required>
+                            <label for="exangNo">Hayır</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ST Depresyonu -->
+                <div class="form-group">
+                    <label class="form-label" for="oldpeak">
+                        10. ST Depresyonu (oldpeak) <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="oldpeak"
+                        name="oldpeak"
+                        class="form-input"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        required
+                        placeholder="Örn: 1.5"
+                    >
+                    <p class="form-hint">Egzersize bağlı ST segment düşüşü</p>
+                </div>
+
+                <!-- ST Eğimi -->
+                <div class="form-group">
+                    <label class="form-label" for="slope">
+                        11. ST Segment Eğimi <span class="required">*</span>
+                    </label>
+                    <select id="slope" name="slope" class="form-input" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="1">Yukarı (Olumlu)</option>
+                        <option value="2">Düz (Nötr)</option>
+                        <option value="3">Aşağı (Riskli)</option>
+                    </select>
+                </div>
+
+                <!-- Major Damar Sayısı -->
+                <div class="form-group">
+                    <label class="form-label" for="ca">
+                        12. Boya ile Görülen Major Damar Sayısı (0-3) <span class="required">*</span>
+                    </label>
+                    <select id="ca" name="ca" class="form-input" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="0">0 (Temiz)</option>
+                        <option value="1">1 damar</option>
+                        <option value="2">2 damar</option>
+                        <option value="3">3 damar</option>
+                    </select>
+                    <p class="form-hint">Koronar anjiyografi sonucu (bilmiyorsanız 0 seçin)</p>
+                </div>
+
+                <!-- Thalasemi -->
+                <div class="form-group">
+                    <label class="form-label" for="thal">
+                        13. Thalasemi Sonucu <span class="required">*</span>
+                    </label>
+                    <select id="thal" name="thal" class="form-input" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="1">Normal</option>
+                        <option value="2">Reversibl Defekt</option>
+                        <option value="3">Tespit Edilemez</option>
+                    </select>
+                    <p class="form-hint">Talium stres testi sonucu</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span>🔍</span>
+                    Risk Analizi Yap
+                </button>
+            </form>
+        </section>
+
+        <!-- Loading Section -->
+        <section class="card loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p>AI modeli analiz yapıyor...</p>
+            <p class="form-hint">XGBoost algoritması kullanılıyor</p>
+        </section>
+
+        <!-- Results Section -->
+        <section class="card results-section" id="resultsSection">
+            <h2 class="card-title">
+                <span class="icon">📊</span>
+                Analiz Sonucu
+            </h2>
+
+            <!-- Risk Score -->
+            <div class="risk-score">
+                <div class="risk-score-value" id="riskScoreValue">0%</div>
+                <div class="risk-score-label">Kalp Hastalığı Risk Skoru</div>
+            </div>
+
+            <!-- Risk Badge -->
+            <div style="text-align: center;">
+                <span class="risk-badge" id="riskBadge">Düşük Risk</span>
+            </div>
+
+            <!-- Factors -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 1rem; margin-bottom: 12px;">Değerlendirilen Faktörler:</h3>
+                <ul class="factors-list" id="factorsList">
+                    <!-- Dinamik olarak doldurulacak -->
+                </ul>
+            </div>
+
+            <!-- AI Explanation -->
+            <div class="explanation-box">
+                <h3>🤖 Gemini AI Açıklaması</h3>
+                <p id="aiExplanation">AI açıklaması yükleniyor...</p>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <strong>⚠️ Önemli Uyarı</strong>
+                Bu değerlendirme bilgilendirme amaçlıdır ve tıbbi teşhis/tedavi yerine geçmez.
+                Acil bir durumunuz varsa 112'yi arayın veya en yakın sağlık kuruluşuna başvurun.
+                Lütfen bir kardiyolog ile görüşün.
+            </div>
+
+            <!-- New Assessment Button -->
+            <button class="btn btn-primary" id="newAssessmentBtn" style="margin-top: 20px;">
+                <span>🔄</span>
+                Yeni Analiz
+            </button>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/heartData.js"></script>
+    <script src="js/heartRiskModel.js"></script>
+    <script src="js/geminiService.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
