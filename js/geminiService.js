@@ -4,12 +4,6 @@
  * insani ve anlaşılır bir dile çevirir
  */
 
-class GeminiService {
-    constructor() {
-        // Gemini API entegrasyonu için temel yapı
-        this.apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-        this.apiKey = 'AIzaSyClo56lH1NDVO-LrKHGVNqiUdz12I39TNQ';
-    }
 
     /**
      * Risk sonuçlarını Gemini'ye göndererek insani açıklama alır
